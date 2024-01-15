@@ -1,0 +1,6 @@
+2023-12-27 10:30:02 - Transfer from Alice to Bob: Success
+2023-12-27 10:30:02 - Deposit for Bob: Success
+2023-12-27 10:30:02 - Withdrawal for Alice: Success
+2023-12-27 10:30:32 - Transfer from Alice to Bob: Success
+2023-12-27 10:30:38 - Deposit for Bob: Success
+2023-12-27 10:30:41 - Withdrawal for Alice: Success
