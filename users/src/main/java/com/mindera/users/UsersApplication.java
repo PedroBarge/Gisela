@@ -13,8 +13,8 @@ public class UsersApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UsersApplication.class, args);
 	}
-	@GetMapping("/hello")
-	public String hello(@RequestParam(value = "name", defaultValue = "World" ) String name) {
+	@GetMapping("/users")
+	public String hello(@RequestParam(value = "name", defaultValue = "Pedro" ) String name) {
 		return String.format("Hello %s!", name);
 	}
 }
