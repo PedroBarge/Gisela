@@ -11,10 +11,6 @@ public class UserService {
 
     public final UserRepository repository = new UserRepository();
 
-    public List<UserEntity> getUsers() {
-        return repository.getUsers();
-    }
-
     public UserEntity addUser(final UserEntity user) {
         return repository.addUser(user);
     }
