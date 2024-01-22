@@ -20,16 +20,15 @@ public class UserController {
     public List<UserDto> getAll() {
         return service.getAllUsers();
     }
+    @GetMapping("/{id}")
+    public UserDto getById(@PathVariable Integer id) {
+        return service.getUser(id);
+    }
 
     @PostMapping
     public UserDto add(@RequestBody UserDto user) {
         service.add(user);
         return user;
-    }
-
-    @GetMapping("/{id}")
-    public UserDto getById(@PathVariable Integer id) {
-        return service.getUser(id);
     }
 
     @DeleteMapping("/delete/{id}")
