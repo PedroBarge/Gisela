@@ -4,6 +4,7 @@ import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,5 +36,17 @@ public class UserService {
                 .stream()
                 .map(userEntity -> new UserDto(userEntity.getUsername(), userEntity.getPassword()))
                 .toList();
+    }
+
+    public void update(Integer id, UserDto updatedUser) {
+        UserEntity existingUser = repository.findById(id)
+                .orElseThrow();
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setPassword(updatedUser.getPassword());
+        repository.save(existingUser);
+    }
+
+    public void deleteUser(Integer id) {
+        repository.deleteById(id);
     }
 }

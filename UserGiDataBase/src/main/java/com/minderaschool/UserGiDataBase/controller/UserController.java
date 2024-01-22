@@ -2,6 +2,7 @@ package com.minderaschool.UserGiDataBase.controller;
 
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.service.UserService;
+import org.hibernate.Internal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,5 +30,15 @@ public class UserController {
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable Integer id) {
         return service.getUser(id);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public void deleteUserById(@PathVariable Integer id) {
+        service.deleteUser(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public void updateUser(@PathVariable Integer id, UserDto userDto){
+        service.update(id, userDto);
     }
 }
