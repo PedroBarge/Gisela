@@ -11,21 +11,23 @@ import java.util.List;
 public class UserController {
     private final UserService service;
 
-    public UserController(UserService service){
-        this.service=service;
+    public UserController(UserService service) {
+        this.service = service;
     }
 
     @GetMapping("/get")
     public List<UserDto> getAll() {
-        return service.getAll();
+        return service.getAllUsers();
     }
+
     @PostMapping
-    public void add(UserDto user) {
+    public UserDto add(@RequestBody UserDto user) {
         service.add(user);
+        return user;
     }
 
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable Integer id) {
-        return service.getOne(id);
+        return service.getUser(id);
     }
 }
