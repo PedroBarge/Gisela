@@ -2,7 +2,6 @@ package com.minderaschool.UserGiDataBase.controller;
 
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.service.UserService;
-import org.hibernate.Internal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
