@@ -3,8 +3,6 @@ package com.minderaschool.UserGiDataBase.service;
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,12 +16,11 @@ public class UserService {
         this.repository = repository;
     }
 
-    public UserDto add(UserDto user) {
+    public void add(UserDto user) {
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         repository.save(entity);
-        return user;
     }
 
     public UserDto getUser(Integer id) {
@@ -39,8 +36,7 @@ public class UserService {
     }
 
     public void update(Integer id, UserDto updatedUser) {
-        UserEntity existingUser = repository.findById(id)
-                .orElseThrow();
+        UserEntity existingUser = repository.getReferenceById(id);
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPassword(updatedUser.getPassword());
         repository.save(existingUser);

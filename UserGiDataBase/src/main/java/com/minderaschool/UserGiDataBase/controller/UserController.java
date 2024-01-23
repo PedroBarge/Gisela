@@ -20,12 +20,13 @@ public class UserController {
     public List<UserDto> getAll() {
         return service.getAllUsers();
     }
+
     @GetMapping("/{id}")
     public UserDto getById(@PathVariable Integer id) {
         return service.getUser(id);
     }
 
-    @PostMapping
+    @PostMapping("/add")
     public UserDto add(@RequestBody UserDto user) {
         service.add(user);
         return user;
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
-    public void updateUser(@PathVariable Integer id, UserDto userDto){
+    public void updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         service.update(id, userDto);
     }
 }
