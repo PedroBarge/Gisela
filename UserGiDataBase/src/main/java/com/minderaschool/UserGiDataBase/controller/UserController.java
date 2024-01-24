@@ -1,7 +1,9 @@
 package com.minderaschool.UserGiDataBase.controller;
 
 import com.minderaschool.UserGiDataBase.dto.UserDto;
+import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.service.UserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +29,18 @@ public class UserController {
 
     @PostMapping("/add")
     public UserDto add(@RequestBody UserDto user) {
-        service.add(user);
-        return user;
+        try {
+            if (user.getUsername() != null && user.getPassword() !=null) {
+                service.add(user);
+                return user;
+            }
+            if (user.getPassword() == null || user.getUsername() == null) {
+                throw new UserNotFoundException("Incompleto user");
+            }
+        } catch (UserNotFoundException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return null;
     }
 
     @DeleteMapping("/delete/{id}")
