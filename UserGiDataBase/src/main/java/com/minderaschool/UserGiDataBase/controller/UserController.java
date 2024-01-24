@@ -52,4 +52,13 @@ public class UserController {
     public void updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         service.update(id, userDto);
     }
+
+    @PatchMapping("/update/username/{id}")
+    public void updateUsername(@PathVariable Integer id, @RequestBody UserDto userDto) {
+        service.update(id, userDto);
+    }
+    @PatchMapping("/update/password/{id}")
+    public void updatePassword(@PathVariable Integer id, @RequestBody UserDto userDto) {
+        service.update(id, userDto);
+    }
 }

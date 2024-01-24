@@ -16,11 +16,12 @@ public class UserService {
         this.repository = repository;
     }
 
-    public void add(UserDto user) {
+    public UserDto add(UserDto user) {
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         repository.save(entity);
+        return user;
     }
 
     public UserDto getUser(Integer id) {
@@ -40,6 +41,18 @@ public class UserService {
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPassword(updatedUser.getPassword());
         repository.save(existingUser);
+    }
+
+    public void updatePassword(Integer id, UserDto updatePassword){
+        UserEntity user = repository.getReferenceById(id);
+        user.setPassword(updatePassword.getPassword());
+        repository.save(user);
+    }
+
+    public void updateUsername(Integer id, UserDto updateUsername){
+        UserEntity user = repository.getReferenceById(id);
+        user.setUsername(updateUsername.getUsername());
+        repository.save(user);
     }
 
     public void deleteUser(Integer id) {

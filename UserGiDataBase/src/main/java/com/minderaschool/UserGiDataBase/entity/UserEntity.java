@@ -1,14 +1,17 @@
 package com.minderaschool.UserGiDataBase.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.io.Serializable;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 @Setter
 @Getter
 @Entity
+@Table(name="user_table")
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,14 +20,5 @@ public class UserEntity implements Serializable {
     private String username;
     @Column
     private String password;
-
-    public UserEntity() {
-    }
-
-    public UserEntity(Integer id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
 
 }
