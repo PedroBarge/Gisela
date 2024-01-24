@@ -3,7 +3,6 @@ package com.minderaschool.UserGiDataBase.controller;
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.service.UserService;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,10 +54,10 @@ public class UserController {
 
     @PatchMapping("/update/username/{id}")
     public void updateUsername(@PathVariable Integer id, @RequestBody UserDto userDto) {
-        service.update(id, userDto);
+        service.updateUsername(id, userDto);
     }
     @PatchMapping("/update/password/{id}")
     public void updatePassword(@PathVariable Integer id, @RequestBody UserDto userDto) {
-        service.update(id, userDto);
+        service.updatePassword(id, userDto);
     }
 }
