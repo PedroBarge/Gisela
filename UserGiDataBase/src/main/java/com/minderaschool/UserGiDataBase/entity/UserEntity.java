@@ -5,10 +5,9 @@ import lombok.*;
 
 import java.io.Serializable;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Setter
+@Builder
 @Getter
 @Entity
 @Table(name="user_table")
@@ -21,4 +20,12 @@ public class UserEntity implements Serializable {
     @Column
     private String password;
 
+    public UserEntity(Integer id, String username, String password) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+    }
+
+    public UserEntity() {
+    }
 }
