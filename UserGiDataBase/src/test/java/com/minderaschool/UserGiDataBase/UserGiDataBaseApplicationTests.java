@@ -52,7 +52,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/add")
+                .post("/user/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
@@ -70,11 +70,11 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/get")
+                        .get("/user/get")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[2].username", is("User2")));
+                .andExpect(jsonPath("$[1].username", is("User2")));
     }
 
     @Test
@@ -84,12 +84,12 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/{id}", idToSearchTest)
+                        .get("user/{id}", idToSearchTest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[1].username", is("User1")))
-                .andExpect(jsonPath("$[1].password", is("Password1")));
+                .andExpect(jsonPath("$[0].username", is("User1")))
+                .andExpect(jsonPath("$[0].password", is("Password1")));
     }
 
     @Test
@@ -103,7 +103,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(user2));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/{id}", userIdToDelete)
+                .delete("/user/{id}", userIdToDelete)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
