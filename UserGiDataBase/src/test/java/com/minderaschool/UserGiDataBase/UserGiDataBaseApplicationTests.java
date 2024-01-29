@@ -1,15 +1,14 @@
 package com.minderaschool.UserGiDataBase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 
 import org.junit.jupiter.api.Test;
 
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -17,11 +16,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
@@ -29,6 +28,7 @@ import static org.hamcrest.Matchers.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
+@AutoConfigureMockMvc
 class UserGiDataBaseApplicationTests {
     @Autowired
     MockMvc mockMvc;
@@ -51,14 +51,17 @@ class UserGiDataBaseApplicationTests {
 
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
-        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders.post("/add")
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .post("/add")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
+
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
 //                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.username", is("User4")));
+//                .andExpect(jsonPath("$.username", is("User4")))
+//                .andExpect(jsonPath("$.password",is("Password4")));
     }
 
     @Test
@@ -75,17 +78,36 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    void testGetUser() {
+    void testGetUser() throws Exception {
+        int idToSearchTest = 1;
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
+        Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/{id}", idToSearchTest)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[1].username", is("User1")))
+                .andExpect(jsonPath("$[1].password", is("Password1")));
+    }
+
+    @Test
+    void testUpdateUser() throws Exception {
 
     }
 
     @Test
-    void testUpdateUser() {
+    void testDeleteUser() throws Exception {
+        int userIdToDelete = 1;
+        Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(user2));
 
-    }
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/{id}", userIdToDelete)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
 
-    @Test
-    void testDeleteUser() {
-
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk());
     }
 }
