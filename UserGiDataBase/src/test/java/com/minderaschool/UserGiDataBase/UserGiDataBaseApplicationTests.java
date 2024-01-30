@@ -42,7 +42,7 @@ class UserGiDataBaseApplicationTests {
     UserEntity user3 = new UserEntity(3, "User3", "Password3");
 
     @Test
-    void testAddUser() throws Exception {
+    void testAddUserOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
                 .id(4)
                 .username("User4")
@@ -65,7 +65,7 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    void testGetAllUsers() throws Exception {
+    void testGetAllUsersOk() throws Exception {
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
@@ -78,7 +78,7 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    void testGetUser() throws Exception {
+    void testGetUserOk() throws Exception {
         int idToSearchTest = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
@@ -92,12 +92,12 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    void testUpdateUser() throws Exception {
+    void testUpdateUserOk() throws Exception {
 
     }
 
     @Test
-    void testDeleteUser() throws Exception {
+    void testDeleteUserOk() throws Exception {
         int userIdToDelete = 1;
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(user2));
 
