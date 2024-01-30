@@ -58,10 +58,10 @@ class UserGiDataBaseApplicationTests {
                 .content(this.mapper.writeValueAsString(userEntity));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk());
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.username", is("User4")))
-//                .andExpect(jsonPath("$.password",is("Password4")));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", notNullValue()))
+                .andExpect(jsonPath("$.username", is("User4")))
+                .andExpect(jsonPath("$.password",is("Password4")));
     }
 
     @Test
@@ -84,12 +84,11 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("user/{id}", idToSearchTest)
+                        .get("/user/{id}", idToSearchTest)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[0].username", is("User1")))
-                .andExpect(jsonPath("$[0].password", is("Password1")));
+                .andExpect(jsonPath("$.username", is("User2")))
+                .andExpect(jsonPath("$.password", is("Password2")));
     }
 
     @Test
@@ -103,7 +102,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(user2));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/user/{id}", userIdToDelete)
+                .delete("/user/delete/{id}", userIdToDelete)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
