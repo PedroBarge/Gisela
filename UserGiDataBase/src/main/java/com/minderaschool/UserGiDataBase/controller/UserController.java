@@ -3,6 +3,7 @@ package com.minderaschool.UserGiDataBase.controller;
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,19 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public UserDto add(@RequestBody UserDto user) {
-        try {
-            if (user.getUsername() != null && user.getPassword() !=null) {
-                service.add(user);
-                return user;
-            }
-            if (user.getPassword() == null || user.getUsername() == null) {
-                throw new UserNotFoundException("Incompleto user");
-            }
-        } catch (UserNotFoundException e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-        return null;
+    public void add(@RequestBody UserDto user) {
+        service.add(user);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -52,8 +42,8 @@ public class UserController {
         service.update(id, userDto);
     }
 
-   @PatchMapping("/update/patch/{id}")
-    public void updateWithPatch(@PathVariable Integer id, @RequestBody UserDto userDto){
-        service.updatePatch(id,userDto);
-   }
+    @PatchMapping("/update/patch/{id}")
+    public void updateWithPatch(@PathVariable Integer id, @RequestBody UserDto userDto) {
+        service.updatePatch(id, userDto);
+    }
 }

@@ -2,8 +2,11 @@ package com.minderaschool.UserGiDataBase.service;
 
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
+import com.minderaschool.UserGiDataBase.exception.UserMissArgs;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -57,7 +60,7 @@ public class UserService {
 
     public void deleteUser(Integer id) throws Exception {
         if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User "+id+" not found");
+            throw new UserNotFoundException("User " + id + " not found");
         }
         repository.deleteById(id);
     }
