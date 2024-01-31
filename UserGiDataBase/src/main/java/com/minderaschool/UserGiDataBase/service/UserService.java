@@ -50,6 +50,9 @@ public class UserService {
     }
 
     public void update(Integer id, UserDto updatedUser) {
+        if (repository.findById(id).isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
         UserEntity existingUser = repository.getReferenceById(id);
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPassword(updatedUser.getPassword());
@@ -57,6 +60,9 @@ public class UserService {
     }
 
     public void updatePatch(Integer id, UserDto updatePatch) {
+        if (repository.findById(id).isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
         UserEntity user = repository.getReferenceById(id);
         if (updatePatch.getUsername() != null) {
             user.setUsername(updatePatch.getUsername());
