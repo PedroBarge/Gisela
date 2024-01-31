@@ -3,6 +3,9 @@ package com.minderaschool.UserGiDataBase;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
@@ -36,10 +39,24 @@ class UserGiDataBaseApplicationTests {
     private UserRepository userRepository;
 
     private final ObjectMapper mapper = new ObjectMapper();
+    List<UserEntity> listUser;
 
-    UserEntity user1 = new UserEntity(1, "User1", "Password1");
-    UserEntity user2 = new UserEntity(2, "User2", "Password2");
-    UserEntity user3 = new UserEntity(3, "User3", "Password3");
+    @BeforeEach
+    void init() {
+        UserEntity user1 = new UserEntity(1, "User1", "Password1");
+        UserEntity user2 = new UserEntity(2, "User2", "Password2");
+        UserEntity user3 = new UserEntity(3, "User3", "Password3");
+        listUser = new ArrayList<>();
+        listUser.add(user1);
+        listUser.add(user2);
+        listUser.add(user3);
+    }
+
+    @AfterEach
+    void teardown() {
+        listUser.clear();
+    }
+
 
     @Test
     void testAddUserOk() throws Exception {
@@ -59,7 +76,7 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
-//                .andExpect(jsonPath("$.id", is(4)))
+//                .andExpect(jsonPath("$", notNullValue()))
 //                .andExpect(jsonPath("$.username", is("User4")))
 //                .andExpect(jsonPath("$.password",is("Password4")));
     }
@@ -85,7 +102,6 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testGetAllUsersOk() throws Exception {
-        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -99,7 +115,7 @@ class UserGiDataBaseApplicationTests {
     @Test
     void testGetUserOk() throws Exception {
         int idToSearchTest = 1;
-        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
+
         Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -118,7 +134,7 @@ class UserGiDataBaseApplicationTests {
     @Test
     void testDeleteUserOk() throws Exception {
         int userIdToDelete = 1;
-        Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(user2));
+        Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(listUser.get(userIdToDelete)));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .delete("/user/delete/{id}", userIdToDelete)
