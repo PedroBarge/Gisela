@@ -5,6 +5,7 @@ import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.exception.UserMissArgs;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,11 @@ public class UserService {
     }
 
     public UserDto add(UserDto user) {
+
+        if (user.getUsername() == null || user.getPassword() == null) {
+            throw new UserMissArgs("User not complete");
+        }
+
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
@@ -29,6 +35,9 @@ public class UserService {
     }
 
     public UserDto getUser(Integer id) {
+        if (repository.findById(id).isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
         UserEntity user = repository.getReferenceById(id);
         return new UserDto(user.getUsername(), user.getPassword());
     }

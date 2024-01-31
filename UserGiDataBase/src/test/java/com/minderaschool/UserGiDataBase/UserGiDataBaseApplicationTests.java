@@ -38,6 +38,7 @@ class UserGiDataBaseApplicationTests {
     @MockBean
     private UserRepository userRepository;
 
+    //-----Variables Area-----\\
     private final ObjectMapper mapper = new ObjectMapper();
     List<UserEntity> listUser;
 
@@ -57,7 +58,7 @@ class UserGiDataBaseApplicationTests {
         listUser.clear();
     }
 
-
+    //-----TEST AREA-----\\
     @Test
     void testAddUserOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
@@ -76,11 +77,7 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
-//                .andExpect(jsonPath("$", notNullValue()))
-//                .andExpect(jsonPath("$.username", is("User4")))
-//                .andExpect(jsonPath("$.password",is("Password4")));
     }
-
 
     @Test
     void testAddUserNotOk() throws Exception {
@@ -127,8 +124,15 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    void testUpdateUserOk() throws Exception {
+    void testGetUserNotOk() throws Exception {
+        int idToSearchTest = 4;
 
+        Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .get("/user/{id}", idToSearchTest)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -143,5 +147,15 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void testUpdateUserOk() throws Exception {
+        UserEntity updateUser = UserEntity.builder()
+                .id(1)
+                .username("NewName")
+                .password("NewPassword")
+                .build();
+
     }
 }
