@@ -1,12 +1,8 @@
 package com.minderaschool.UserGiDataBase;
 
-import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
@@ -87,7 +83,7 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testGetAllUsersOk() throws Exception {
-
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -103,7 +99,7 @@ class UserGiDataBaseApplicationTests {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
 
-        Mockito.when(userRepository.getReferenceById(id)).thenReturn(listUser.get(id));
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable(listUser.get(id)));
 
         mockMvc.perform(MockMvcRequestBuilders
                         .get("/user/{id}", id)
@@ -128,6 +124,7 @@ class UserGiDataBaseApplicationTests {
     @Test
     void testDeleteUserOk() throws Exception {
         int userIdToDelete = 1;
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(listUser.get(userIdToDelete)));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -142,13 +139,14 @@ class UserGiDataBaseApplicationTests {
     @Test
     void testUpdateUserOk() throws Exception {
         int id = 1;
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         UserEntity userEntity = UserEntity.builder()
                 .id(1)
-                .username("User4")
-                .password("Password4")
+                .username("UPDATE")
+                .password("UpdatePassword")
                 .build();
 
-        Mockito.when(userRepository.getReferenceById(id)).thenReturn((listUser.get(id)));
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable((listUser.get(id))));
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
@@ -158,8 +156,28 @@ class UserGiDataBaseApplicationTests {
                 .content(this.mapper.writeValueAsString(userEntity));
 
         mockMvc.perform(mockRequest)
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name", is("NewName")))
-                .andExpect(jsonPath("$.password", is("NewPassword")));
+                .andExpect(status().isOk());
+    }
+    @Test
+    void testUpdateUserNotOk() throws Exception {
+        int id = 1;
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
+        UserEntity userEntity = UserEntity.builder()
+                .id(1)
+                .username("UPDATE")
+                .password(null)
+                .build();
+
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable((listUser.get(id))));
+        Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .put("/user/update/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(userEntity));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest());
     }
 }

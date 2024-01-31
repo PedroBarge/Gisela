@@ -23,11 +23,9 @@ public class UserService {
     }
 
     public UserDto add(UserDto user) {
-
         if (user.getUsername() == null || user.getPassword() == null) {
             throw new UserMissArgs("User not complete");
         }
-
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
@@ -36,11 +34,17 @@ public class UserService {
     }
 
     public UserDto getUser(Integer id) {
-        if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User "+id+" not found");
-        }
-        UserEntity user = repository.getReferenceById(id);
+
+        UserEntity user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
+
         return new UserDto(user.getUsername(), user.getPassword());
+
+//        if (repository.getReferenceById(id) == null) {
+//            throw new UserNotFoundException("User " + id + " not found");
+//        }
+//        UserEntity user = repository.getReferenceById(id);
+//        return new UserDto(user.getUsername(), user.getPassword());
     }
 
     public List<UserDto> getAllUsers() {
@@ -52,13 +56,12 @@ public class UserService {
     }
 
     public void update(Integer id, UserDto updatedUser) {
-        if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User "+id+" not found");
-        }
         if (updatedUser.getUsername() == null || updatedUser.getPassword() == null) {
             throw new UserMissArgs("User not complete");
         }
-        UserEntity existingUser = repository.getReferenceById(id);
+        UserEntity existingUser = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
+
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPassword(updatedUser.getPassword());
         repository.save(existingUser);
@@ -66,7 +69,7 @@ public class UserService {
 
     public void updatePatch(Integer id, UserDto updatePatch) {
         if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User "+id+" not found");
+            throw new UserNotFoundException("User " + id + " not found");
         }
         if (updatePatch.getUsername() == null && updatePatch.getPassword() == null) {
             throw new UserMissArgs("User not complete");
