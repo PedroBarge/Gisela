@@ -1,5 +1,6 @@
 package com.minderaschool.UserGiDataBase;
 
+import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 
@@ -41,22 +42,9 @@ class UserGiDataBaseApplicationTests {
     //-----Variables Area-----\\
     private final ObjectMapper mapper = new ObjectMapper();
     List<UserEntity> listUser;
-
-    @BeforeEach
-    void init() {
-        UserEntity user1 = new UserEntity(1, "User1", "Password1");
-        UserEntity user2 = new UserEntity(2, "User2", "Password2");
-        UserEntity user3 = new UserEntity(3, "User3", "Password3");
-        listUser = new ArrayList<>();
-        listUser.add(user1);
-        listUser.add(user2);
-        listUser.add(user3);
-    }
-
-    @AfterEach
-    void teardown() {
-        listUser.clear();
-    }
+    UserEntity user1 = new UserEntity(1, "User1", "Password1");
+    UserEntity user2 = new UserEntity(2, "User2", "Password2");
+    UserEntity user3 = new UserEntity(3, "User3", "Password3");
 
     //-----TEST AREA-----\\
     @Test
@@ -99,6 +87,7 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testGetAllUsersOk() throws Exception {
+
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
         mockMvc.perform(MockMvcRequestBuilders
@@ -111,12 +100,13 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testGetUserOk() throws Exception {
-        int idToSearchTest = 1;
+        int id = 1;
+        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
 
-        Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(listUser.get(idToSearchTest));
+        Mockito.when(userRepository.getReferenceById(id)).thenReturn(listUser.get(id));
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/user/{id}", idToSearchTest)
+                        .get("/user/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.username", is("User2")))
@@ -151,11 +141,25 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testUpdateUserOk() throws Exception {
-        UserEntity updateUser = UserEntity.builder()
+        int id = 1;
+        UserEntity userEntity = UserEntity.builder()
                 .id(1)
-                .username("NewName")
-                .password("NewPassword")
+                .username("User4")
+                .password("Password4")
                 .build();
 
+        Mockito.when(userRepository.getReferenceById(id)).thenReturn((listUser.get(id)));
+        Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .put("/user/update/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(userEntity));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name", is("NewName")))
+                .andExpect(jsonPath("$.password", is("NewPassword")));
     }
 }

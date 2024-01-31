@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -36,7 +37,7 @@ public class UserService {
 
     public UserDto getUser(Integer id) {
         if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User "+id+" not found");
         }
         UserEntity user = repository.getReferenceById(id);
         return new UserDto(user.getUsername(), user.getPassword());
@@ -45,13 +46,17 @@ public class UserService {
     public List<UserDto> getAllUsers() {
         return repository.findAll()
                 .stream()
+                .sorted(Comparator.comparing(UserEntity::getId))
                 .map(userEntity -> new UserDto(userEntity.getUsername(), userEntity.getPassword()))
                 .toList();
     }
 
     public void update(Integer id, UserDto updatedUser) {
         if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User "+id+" not found");
+        }
+        if (updatedUser.getUsername() == null || updatedUser.getPassword() == null) {
+            throw new UserMissArgs("User not complete");
         }
         UserEntity existingUser = repository.getReferenceById(id);
         existingUser.setUsername(updatedUser.getUsername());
@@ -61,7 +66,10 @@ public class UserService {
 
     public void updatePatch(Integer id, UserDto updatePatch) {
         if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User not found");
+            throw new UserNotFoundException("User "+id+" not found");
+        }
+        if (updatePatch.getUsername() == null && updatePatch.getPassword() == null) {
+            throw new UserMissArgs("User not complete");
         }
         UserEntity user = repository.getReferenceById(id);
         if (updatePatch.getUsername() != null) {
