@@ -78,7 +78,7 @@ public class UserService {
         repository.save(user);
     }
 
-    public void deleteUser(Integer id) throws Exception {
+    public void deleteUser(Integer id) {
         if (repository.findById(id).isEmpty()) {
             throw new UserNotFoundException("User " + id + " not found");
         }

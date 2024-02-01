@@ -180,6 +180,6 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isBadRequest());
     }
-    
+
     //TODO: Update Patch
 }
