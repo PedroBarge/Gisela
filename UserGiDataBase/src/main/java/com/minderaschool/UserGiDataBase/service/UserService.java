@@ -39,12 +39,6 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
 
         return new UserDto(user.getUsername(), user.getPassword());
-
-//        if (repository.getReferenceById(id) == null) {
-//            throw new UserNotFoundException("User " + id + " not found");
-//        }
-//        UserEntity user = repository.getReferenceById(id);
-//        return new UserDto(user.getUsername(), user.getPassword());
     }
 
     public List<UserDto> getAllUsers() {
@@ -68,13 +62,13 @@ public class UserService {
     }
 
     public void updatePatch(Integer id, UserDto updatePatch) {
-        if (repository.findById(id).isEmpty()) {
-            throw new UserNotFoundException("User " + id + " not found");
-        }
         if (updatePatch.getUsername() == null && updatePatch.getPassword() == null) {
             throw new UserMissArgs("User not complete");
         }
-        UserEntity user = repository.getReferenceById(id);
+
+        UserEntity user = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
+
         if (updatePatch.getUsername() != null) {
             user.setUsername(updatePatch.getUsername());
         }
