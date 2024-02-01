@@ -135,7 +135,7 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
-
+    //TODO: Delete wrong id
     @Test
     void testUpdateUserOk() throws Exception {
         int id = 1;
@@ -180,4 +180,6 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isBadRequest());
     }
+    
+    //TODO: Update Patch
 }
