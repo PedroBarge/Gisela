@@ -166,7 +166,19 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
-    //TODO: Delete wrong id
+    @Test
+    void testDeleteUserOkShouldExpectStatusIsBadRequest() throws Exception {
+        int userIdToDelete = 1;
+        Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .delete("/user/delete/{id}", userIdToDelete)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest());
+    }
     //----------\\
     /**
      *
