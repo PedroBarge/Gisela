@@ -50,7 +50,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testAddUserOk() throws Exception {
+    void testAddUserOkShouldExpectStatusIsOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
                 .id(4)
                 .username("User4")
@@ -75,7 +75,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testAddUserNotOk() throws Exception {
+    void testAddUserNotOkShouldExpectStatusIsBadRequest() throws Exception {
         UserEntity userEntity = UserEntity.builder()
                 .id(4)
                 .build();
@@ -98,7 +98,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testGetAllUsersOk() throws Exception {
+    void testGetAllUsersOkShouldExpectStatusIsOk() throws Exception {
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
@@ -116,7 +116,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testGetUserOk() throws Exception {
+    void testGetUserOkShouldExpectStatusIsOk() throws Exception {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
 
@@ -136,7 +136,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testGetUserNotOk() throws Exception {
+    void testGetUserNotOkShouldExpectStatusIsBadRequest() throws Exception {
         int idToSearchTest = 4;
 
         Mockito.when(userRepository.getReferenceById(idToSearchTest)).thenReturn(null);
@@ -153,7 +153,7 @@ class UserGiDataBaseApplicationTests {
      *
      */
     @Test
-    void testDeleteUserOk() throws Exception {
+    void testDeleteUserOkShouldExpectStatusIsOk() throws Exception {
         int userIdToDelete = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(listUser.get(userIdToDelete)));
