@@ -146,7 +146,7 @@ class UserGiDataBaseApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-//----------\\
+    //----------\\
     /**
      *
      * Test to DELETE user sucess
@@ -166,6 +166,12 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
+    //----------\\
+    /**
+     *
+     * Test to DELETE user not sucess
+     *
+     */
     @Test
     void testDeleteUserOkShouldExpectStatusIsBadRequest() throws Exception {
         int userIdToDelete = 1;
