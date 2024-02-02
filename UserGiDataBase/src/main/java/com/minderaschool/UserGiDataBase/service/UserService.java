@@ -2,12 +2,9 @@ package com.minderaschool.UserGiDataBase.service;
 
 import com.minderaschool.UserGiDataBase.dto.UserDto;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
-import com.minderaschool.UserGiDataBase.exception.UserMissArgs;
+import com.minderaschool.UserGiDataBase.exception.UserMissArgsException;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -24,7 +21,7 @@ public class UserService {
 
     public UserDto add(UserDto user) {
         if (user.getUsername() == null || user.getPassword() == null) {
-            throw new UserMissArgs("User not complete");
+            throw new UserMissArgsException("User not complete");
         }
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
@@ -51,7 +48,7 @@ public class UserService {
 
     public void update(Integer id, UserDto updatedUser) {
         if (updatedUser.getUsername() == null || updatedUser.getPassword() == null) {
-            throw new UserMissArgs("User not complete");
+            throw new UserMissArgsException("User not complete");
         }
         UserEntity existingUser = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
@@ -63,7 +60,7 @@ public class UserService {
 
     public void updatePatch(Integer id, UserDto updatePatch) {
         if (updatePatch.getUsername() == null && updatePatch.getPassword() == null) {
-            throw new UserMissArgs("User not complete");
+            throw new UserMissArgsException("User not complete");
         }
 
         UserEntity user = repository.findById(id)

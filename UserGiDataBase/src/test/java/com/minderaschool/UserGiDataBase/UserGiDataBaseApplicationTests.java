@@ -43,6 +43,12 @@ class UserGiDataBaseApplicationTests {
     UserEntity user3 = new UserEntity(3, "User3", "Password3");
 
     //-----TEST AREA-----\\
+
+    /**
+     *
+     * Test to add user sucess
+     *
+     */
     @Test
     void testAddUserOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
@@ -62,7 +68,12 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
-
+    //----------\\
+    /**
+     *
+     * Test to add user don't have the body complete
+     *
+     */
     @Test
     void testAddUserNotOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
@@ -80,7 +91,12 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isBadRequest());
     }
-
+    //----------\\
+    /**
+     *
+     * Test to get all the users OK
+     *
+     */
     @Test
     void testGetAllUsersOk() throws Exception {
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
@@ -93,7 +109,12 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(jsonPath("$", hasSize(3)))
                 .andExpect(jsonPath("$[1].username", is("User2")));
     }
-
+    //----------\\
+    /**
+     *
+     * Test to get one user
+     *
+     */
     @Test
     void testGetUserOk() throws Exception {
         int id = 1;
@@ -108,7 +129,12 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(jsonPath("$.username", is("User2")))
                 .andExpect(jsonPath("$.password", is("Password2")));
     }
-
+//----------\\
+    /**
+     *
+     * Test to get one user but not ok
+     *
+     */
     @Test
     void testGetUserNotOk() throws Exception {
         int idToSearchTest = 4;
@@ -120,7 +146,12 @@ class UserGiDataBaseApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-
+//----------\\
+    /**
+     *
+     * Test to DELETE user sucess
+     *
+     */
     @Test
     void testDeleteUserOk() throws Exception {
         int userIdToDelete = 1;
@@ -136,8 +167,14 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isOk());
     }
     //TODO: Delete wrong id
+    //----------\\
+    /**
+     *
+     * Test to UPDATE user sucess
+     *
+     */
     @Test
-    void testUpdateUserOk() throws Exception {
+    void testUpdateUserOkShouldReturnOkStatus() throws Exception {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         UserEntity userEntity = UserEntity.builder()
@@ -158,8 +195,14 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
+    //----------\\
+    /**
+     *
+     * Test to UPDATE user with bad request
+     *
+     */
     @Test
-    void testUpdateUserNotOk() throws Exception {
+    void testUpdateUserNotOkShouldReturnBadRequest() throws Exception {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         UserEntity userEntity = UserEntity.builder()
@@ -169,6 +212,33 @@ class UserGiDataBaseApplicationTests {
                 .build();
 
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable((listUser.get(id))));
+        Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+
+        MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
+                .put("/user/update/{id}", id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(userEntity));
+
+        mockMvc.perform(mockRequest)
+                .andExpect(status().isBadRequest());
+    }
+    //----------\\
+    /**
+     *
+     * Test to UPDATE user with bad request id NULL
+     *
+     */
+    @Test
+    void testUpdateUserNotOkShouldReturnBadRequestIdNull() throws Exception {
+        int id = 1;
+        UserEntity userEntity = UserEntity.builder()
+                .id(null)
+                .username("UPDATE")
+                .password("password")
+                .build();
+
+        Mockito.when(userRepository.findById(id)).thenReturn(Optional.empty());
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
