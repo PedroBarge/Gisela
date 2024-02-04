@@ -60,7 +60,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/user/add")
+                .post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
@@ -83,7 +83,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .post("/user/add")
+                .post("/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
@@ -103,7 +103,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findAll()).thenReturn(listUser);
 
         mockMvc.perform(MockMvcRequestBuilders
-                        .get("/user/get")
+                        .get("/user")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
@@ -159,7 +159,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.of(listUser.get(userIdToDelete)));
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/user/delete/{id}", userIdToDelete)
+                .delete("/user/{id}", userIdToDelete)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -178,7 +178,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.findById(userIdToDelete)).thenReturn(Optional.empty());
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .delete("/user/delete/{id}", userIdToDelete)
+                .delete("/user/{id}", userIdToDelete)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -205,7 +205,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .put("/user/update/{id}", id)
+                .put("/user/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
@@ -233,7 +233,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .put("/user/update/{id}", id)
+                .put("/user/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));
@@ -260,7 +260,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .put("/user/update/{id}", id)
+                .put("/user/{id}", id)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(userEntity));

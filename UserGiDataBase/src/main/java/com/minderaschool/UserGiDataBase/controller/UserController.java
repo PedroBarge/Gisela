@@ -17,7 +17,7 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping("/get")
+    @GetMapping()
     public List<UserDto> getAll() {
         return service.getAllUsers();
     }
@@ -27,22 +27,22 @@ public class UserController {
         return service.getUser(id);
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     public void add(@RequestBody UserDto user) {
         service.add(user);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Integer id) throws Exception {
         service.deleteUser(id);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public void updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
         service.update(id, userDto);
     }
 
-    @PatchMapping("/update/patch/{id}")
+    @PatchMapping("/{id}")
     public void updateWithPatch(@PathVariable Integer id, @RequestBody UserDto userDto) {
         service.updatePatch(id, userDto);
     }
