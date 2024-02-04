@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.hamcrest.Matchers.*;
 
@@ -46,13 +47,12 @@ class UserGiDataBaseApplicationTests {
 
     /**
      *
-     * Test to add user sucess
+     * Test to add user success
      *
      */
     @Test
     void testAddUserOkShouldExpectStatusIsOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
-                .id(4)
                 .username("User4")
                 .password("Password4")
                 .build();
@@ -67,6 +67,8 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
+
+        Mockito.verify(userRepository, times(1)).save(userEntity);
     }
     //----------\\
     /**
@@ -80,7 +82,8 @@ class UserGiDataBaseApplicationTests {
                 .id(4)
                 .build();
 
-        Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+        //Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+        Mockito.verify(userRepository, times(0)).save(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .post("/user")
@@ -107,7 +110,9 @@ class UserGiDataBaseApplicationTests {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(3)))
-                .andExpect(jsonPath("$[1].username", is("User2")));
+                .andExpect(jsonPath("$[0].username",is("User1")))
+                .andExpect(jsonPath("$[1].username", is("User2")))
+                .andExpect(jsonPath("$[2].username", is("User3")));
     }
     //----------\\
     /**
@@ -149,7 +154,7 @@ class UserGiDataBaseApplicationTests {
     //----------\\
     /**
      *
-     * Test to DELETE user sucess
+     * Test to DELETE user success
      *
      */
     @Test
@@ -165,11 +170,12 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
+        Mockito.verify(userRepository, times(1)).deleteById(userIdToDelete);
     }
     //----------\\
     /**
      *
-     * Test to DELETE user not sucess
+     * Test to DELETE user not success
      *
      */
     @Test
@@ -184,11 +190,12 @@ class UserGiDataBaseApplicationTests {
 
         mockMvc.perform(mockRequest)
                 .andExpect(status().isBadRequest());
+        Mockito.verify(userRepository, times(0)).deleteById(userIdToDelete);
     }
     //----------\\
     /**
      *
-     * Test to UPDATE user sucess
+     * Test to UPDATE user success
      *
      */
     @Test
@@ -222,15 +229,14 @@ class UserGiDataBaseApplicationTests {
     @Test
     void testUpdateUserNotOkShouldReturnBadRequest() throws Exception {
         int id = 1;
-        List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
         UserEntity userEntity = UserEntity.builder()
                 .id(1)
                 .username("UPDATE")
                 .password(null)
                 .build();
 
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable((listUser.get(id))));
-        Mockito.when(userRepository.save(userEntity)).thenReturn(userEntity);
+        Mockito.verify(userRepository, times(0)).findById(id);
+        Mockito.verify(userRepository, times(0)).save(userEntity);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
                 .put("/user/{id}", id)

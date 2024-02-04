@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Data
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Entity
 @Table(name="user_table")
@@ -19,14 +21,5 @@ public class UserEntity implements Serializable {
     private String username;
     @Column
     private String password;
-
-    public UserEntity(Integer id, String username, String password) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-    }
-
-    public UserEntity() {
-    }
 
 }
