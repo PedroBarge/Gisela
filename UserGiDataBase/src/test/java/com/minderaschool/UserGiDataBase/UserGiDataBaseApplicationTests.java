@@ -285,7 +285,6 @@ class UserGiDataBaseApplicationTests {
     }
 
     @Test
-    @MethodSource("userData")
     void testUpdatePatchUser() throws Exception {
         int id = 1;
         UserEntity user = new UserEntity();
