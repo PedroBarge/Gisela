@@ -71,6 +71,7 @@ public class UserService {
         if (updatePatch.getPassword() != null) {
             user.setPassword(updatePatch.getPassword());
         }
+
         repository.save(user);
     }
 
