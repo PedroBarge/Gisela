@@ -1,11 +1,14 @@
 package com.minderaschool.UserGiDataBase;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 
 import org.junit.jupiter.api.Test;
 
+import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +49,7 @@ class UserGiDataBaseApplicationTests {
     UserEntity user3 = new UserEntity(3, "User3", "Password3");
 
     //-----TEST AREA-----\\
+
     /**
      * Test to add user success
      */
@@ -70,6 +74,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.verify(userRepository, times(1)).save(userEntity);
     }
     //----------\\
+
     /**
      * Test to add user don't have the body complete
      */
@@ -92,6 +97,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     //----------\\
+
     /**
      * Test to get all the users OK
      */
@@ -110,6 +116,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(jsonPath("$[2].username", is("User3")));
     }
     //----------\\
+
     /**
      * Test to get one user
      */
@@ -128,6 +135,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(jsonPath("$.password", is("Password2")));
     }
     //----------\\
+
     /**
      * Test to get one user but not ok
      */
@@ -143,6 +151,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     //----------\\
+
     /**
      * Test to DELETE user success
      */
@@ -162,6 +171,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.verify(userRepository, times(1)).deleteById(userIdToDelete);
     }
     //----------\\
+
     /**
      * Test to DELETE user not success
      */
@@ -180,6 +190,7 @@ class UserGiDataBaseApplicationTests {
         Mockito.verify(userRepository, times(0)).deleteById(userIdToDelete);
     }
     //----------\\
+
     /**
      * Test to UPDATE user success
      */
@@ -206,6 +217,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isOk());
     }
     //----------\\
+
     /**
      * Test to UPDATE user with bad request
      */
@@ -231,6 +243,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     //----------\\
+
     /**
      * Test to UPDATE user with bad request id NULL
      */
@@ -256,6 +269,7 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     //----------\\
+
     /**
      * Test to UPDATE user with bad request Body NULL
      */
@@ -281,22 +295,24 @@ class UserGiDataBaseApplicationTests {
                 .andExpect(status().isBadRequest());
     }
     //----------\\
+
     /**
      * Test to UPDATE Patch user success
      */
-    static Stream<Arguments> userData() {
+    private static Stream<Arguments> testUpdatePatchUserShouldReturnIsOkARGS() {
         return Stream.of(
-                Arguments.of("UserPatch", null),
-                Arguments.of(null, "PasswordPatch"),
+                Arguments.of("UserPatch", ""),
+                Arguments.of("", "PasswordPatch"),
                 Arguments.of("UserPatch", "PasswordPatch"));
     }
 
-    @Test
-    void testUpdatePatchUserShouldReturnIsOk() throws Exception {
+    @ParameterizedTest
+    @MethodSource("testUpdatePatchUserShouldReturnIsOkARGS")
+    void testUpdatePatchUserShouldReturnIsOk(String name, String pass) throws Exception {
         int id = 1;
         UserEntity user = new UserEntity();
-        user.setUsername(userData().toString());
-        user.setPassword(userData().toString());
+        user.setUsername(name);
+        user.setPassword(pass);
 
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3, user));
 
@@ -312,6 +328,7 @@ class UserGiDataBaseApplicationTests {
         mockMvc.perform(mockRequest)
                 .andExpect(status().isOk());
     }
+
     @Test
     void testUpdatePatchUserShouldReturnBadRequest() throws Exception {
         int id = 3;
