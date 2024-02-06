@@ -303,8 +303,8 @@ class UserGiDataBaseApplicationTests {
      */
     private static Stream<Arguments> testUpdatePatchUserShouldReturnIsOkARGS() {
         return Stream.of(
-                Arguments.of("UserPatch", ""),
-                Arguments.of("", "PasswordPatch"),
+                Arguments.of("UserPatch", null),
+                Arguments.of(null, "PasswordPatch"),
                 Arguments.of("UserPatch", "PasswordPatch"));
     }
 
