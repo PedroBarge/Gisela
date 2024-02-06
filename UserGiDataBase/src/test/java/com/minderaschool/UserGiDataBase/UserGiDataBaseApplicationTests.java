@@ -198,11 +198,7 @@ class UserGiDataBaseApplicationTests {
     void testUpdateUserOkShouldReturnOkStatus() throws Exception {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
-//        UserEntity userEntity = UserEntity.builder()
-//                .id(1)
-//                .username("UPDATE")
-//                .password("UpdatePassword")
-//                .build();
+
         UserEntity userEntity = new UserEntity(1, "UPDATE", "UPDATEPASSWORD");
 
 
