@@ -46,11 +46,13 @@ public class UserService {
     }
 
     public void update(Integer id, UserDto updatedUser) {
+
+        UserEntity existingUser = repository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
+
         if (updatedUser.getUsername() == null || updatedUser.getPassword() == null) {
             throw new UserMissArgsException("User not complete");
         }
-        UserEntity existingUser = repository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
 
         existingUser.setUsername(updatedUser.getUsername());
         existingUser.setPassword(updatedUser.getPassword());
