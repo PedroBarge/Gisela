@@ -1,14 +1,14 @@
 package com.minderaschool.UserGiDataBase.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class DtoGetAll{
+    private int id;
     private String username;
-    private String password;
+
 }

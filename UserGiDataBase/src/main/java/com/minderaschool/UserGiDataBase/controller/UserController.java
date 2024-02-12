@@ -1,9 +1,10 @@
 package com.minderaschool.UserGiDataBase.controller;
 
-import com.minderaschool.UserGiDataBase.dto.UserDto;
-import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
+import com.minderaschool.UserGiDataBase.dto.DtoCreateUser;
+import com.minderaschool.UserGiDataBase.dto.DtoGetAll;
+import com.minderaschool.UserGiDataBase.dto.DtoGetOneUser;
+import com.minderaschool.UserGiDataBase.dto.DtoUpdate;
 import com.minderaschool.UserGiDataBase.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,32 +19,32 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<UserDto> getAll() {
+    public List<DtoGetAll> getAll() {
         return service.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public UserDto getById(@PathVariable Integer id) {
+    public DtoGetOneUser getById(@PathVariable Integer id) {
         return service.getUser(id);
     }
 
     @PostMapping()
-    public void add(@RequestBody UserDto user) {
+    public void add(@RequestBody DtoCreateUser user) {
         service.add(user);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUserById(@PathVariable Integer id) throws Exception {
+    public void deleteUserById(@PathVariable Integer id){
         service.deleteUser(id);
     }
 
     @PutMapping("/{id}")
-    public void updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
-        service.update(id, userDto);
+    public void updateUser(@PathVariable Integer id, @RequestBody DtoUpdate dtoCreateUser) {
+        service.update(id, dtoCreateUser);
     }
 
     @PatchMapping("/{id}")
-    public void updateWithPatch(@PathVariable Integer id, @RequestBody UserDto userDto) {
-        service.updatePatch(id, userDto);
+    public void updateWithPatch(@PathVariable Integer id, @RequestBody DtoUpdate dtoCreateUser) {
+        service.updatePatch(id, dtoCreateUser);
     }
 }

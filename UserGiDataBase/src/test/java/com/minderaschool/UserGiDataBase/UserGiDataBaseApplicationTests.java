@@ -1,22 +1,18 @@
 package com.minderaschool.UserGiDataBase;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
-
 import org.junit.jupiter.api.Test;
-
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.Mockito;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,26 +23,28 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 class UserGiDataBaseApplicationTests {
+
     @Autowired
     MockMvc mockMvc;
     @MockBean
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     //-----Variables Area-----\\
     private final ObjectMapper mapper = new ObjectMapper();
-    List<UserEntity> listUser;
-    UserEntity user1 = new UserEntity(1, "User1", "Password1");
-    UserEntity user2 = new UserEntity(2, "User2", "Password2");
-    UserEntity user3 = new UserEntity(3, "User3", "Password3");
+
+    UserEntity user1 = new UserEntity(1, "User1","user1@email.com","Password1");
+    UserEntity user2 = new UserEntity(2, "User2", "user2@email.com","Password2");
+    UserEntity user3 = new UserEntity(3, "User3", "user3@email.com","Password3");
 
     //-----TEST AREA-----\\
 
@@ -57,6 +55,7 @@ class UserGiDataBaseApplicationTests {
     void testAddUserOkShouldExpectStatusIsOk() throws Exception {
         UserEntity userEntity = UserEntity.builder()
                 .username("User4")
+                .email("user4@email.com")
                 .password("Password4")
                 .build();
 
@@ -199,7 +198,7 @@ class UserGiDataBaseApplicationTests {
         int id = 1;
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3));
 
-        UserEntity userEntity = new UserEntity(1, "UPDATE", "UPDATEPASSWORD");
+        UserEntity userEntity = new UserEntity(1, "UPDATE", "userupdate@email.com","UPDATEPASSWORD");
 
 
         Mockito.when(userRepository.findById(id)).thenReturn(Optional.ofNullable((listUser.get(id))));
@@ -329,18 +328,18 @@ class UserGiDataBaseApplicationTests {
 
     @Test
     void testUpdatePatchUserShouldReturnBadRequest() throws Exception {
-        int id = 3;
+        int idToPatchUserWithBadR = 3;
         UserEntity user = new UserEntity();
         user.setUsername(null);
         user.setPassword(null);
 
         List<UserEntity> listUser = new ArrayList<>(Arrays.asList(user1, user2, user3, user));
 
-        Mockito.when(userRepository.findById(id)).thenReturn(Optional.of(listUser.get(3)));
+        Mockito.when(userRepository.findById(idToPatchUserWithBadR)).thenReturn(Optional.of(listUser.get(3)));
         Mockito.when(userRepository.save(listUser.get(3))).thenReturn(user);
 
         MockHttpServletRequestBuilder mockRequest = MockMvcRequestBuilders
-                .patch("/user/{id}", id)
+                .patch("/user/{idToPatchUserWithBadR}", idToPatchUserWithBadR)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(user));

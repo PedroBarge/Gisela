@@ -12,14 +12,16 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Entity
-@Table(name="user_table")
+@Table(name = "user_table_complete")
 public class UserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
     private Integer id;
     @Column
     private String username;
     @Column
+    private String email;
+    @Column
     private String password;
-
 }

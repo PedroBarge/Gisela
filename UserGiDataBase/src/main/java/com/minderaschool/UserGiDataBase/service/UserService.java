@@ -1,13 +1,15 @@
 package com.minderaschool.UserGiDataBase.service;
 
-import com.minderaschool.UserGiDataBase.dto.UserDto;
+import com.minderaschool.UserGiDataBase.dto.DtoCreateUser;
+import com.minderaschool.UserGiDataBase.dto.DtoGetAll;
+import com.minderaschool.UserGiDataBase.dto.DtoGetOneUser;
+import com.minderaschool.UserGiDataBase.dto.DtoUpdate;
 import com.minderaschool.UserGiDataBase.entity.UserEntity;
 import com.minderaschool.UserGiDataBase.exception.UserMissArgsException;
 import com.minderaschool.UserGiDataBase.exception.UserNotFoundException;
 import com.minderaschool.UserGiDataBase.repositoy.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Comparator;
 import java.util.List;
@@ -18,50 +20,53 @@ public class UserService {
 
     private final UserRepository repository;
 
-    public UserDto add(UserDto user) {
-        if (user.getUsername() == null || user.getPassword() == null) {
-            throw new UserMissArgsException("User not complete");
+    public DtoCreateUser add(DtoCreateUser user) {
+        if (user.getUsername() == null || user.getEmail() == null ||user.getPassword() == null) {
+            throw new UserMissArgsException("User body not complete");
         }
         UserEntity entity = new UserEntity();
         entity.setUsername(user.getUsername());
+        entity.setEmail(user.getEmail());
         entity.setPassword(user.getPassword());
         repository.save(entity);
         return user;
     }
 
-    public UserDto getUser(Integer id) {
+    public DtoGetOneUser getUser(Integer id) {
 
         UserEntity user = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
 
-        return new UserDto(user.getUsername(), user.getPassword());
+        return new DtoGetOneUser(user.getId(), user.getUsername(), user.getEmail(), user.getPassword());
     }
 
-    public List<UserDto> getAllUsers() {
+    public List<DtoGetAll> getAllUsers() {
         return repository.findAll()
                 .stream()
                 .sorted(Comparator.comparing(UserEntity::getId))
-                .map(userEntity -> new UserDto(userEntity.getUsername(), userEntity.getPassword()))
+                .map(userEntity -> new DtoGetAll(userEntity.getId(), userEntity.getUsername()))
                 .toList();
     }
 
-    public void update(Integer id, UserDto updatedUser) {
+    public void update(Integer id, DtoUpdate updatedUser) {
 
-        UserEntity existingUser = repository.findById(id)
+        UserEntity checkID = repository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User " + id + " not found"));
 
-        if (updatedUser.getUsername() == null || updatedUser.getPassword() == null) {
-            throw new UserMissArgsException("User not complete");
+        if ((updatedUser.getUsername() == null || updatedUser.getUsername().isEmpty())
+                || (updatedUser.getPassword() == null || updatedUser.getPassword().isEmpty())) {
+            throw new UserMissArgsException("User not complete or empty");
         }
 
-        existingUser.setUsername(updatedUser.getUsername());
-        existingUser.setPassword(updatedUser.getPassword());
-        repository.save(existingUser);
+        UserEntity userEntity = new UserEntity(checkID.getId(), updatedUser.getUsername(), checkID.getEmail(), updatedUser.getUsername());
+
+        repository.save(userEntity);
     }
 
-    public void updatePatch(Integer id, UserDto updatePatch) {
-        if (updatePatch.getUsername() == null && updatePatch.getPassword() == null) {
-            throw new UserMissArgsException("User not complete");
+    public void updatePatch(Integer id, DtoUpdate updatePatch) {
+        if ((updatePatch.getUsername() == null || updatePatch.getUsername().isEmpty())
+                || (updatePatch.getPassword() == null || updatePatch.getPassword().isEmpty())) {
+            throw new UserMissArgsException("User not complete or empty");
         }
 
         UserEntity user = repository.findById(id)
